@@ -1,5 +1,6 @@
 import { useState } from "react";
 import QUESTIONS from "../questions.js";
+import QuestionTimer from "./QuestionTimer.jsx";
 import quizCompleteImg from "../assets/quiz-complete.png";
 
 export default function Quiz() {
@@ -14,28 +15,36 @@ export default function Quiz() {
     });
   }
 
-  if(quizIsComplete) {
+  if (quizIsComplete) {
     return (
       <div id="summary">
         <img src={quizCompleteImg} alt="Trophy icon" />
         <h2>Quiz Completed!</h2>
       </div>
-    )
+    );
   }
 
   const shuffledQuestions = [...QUESTIONS[activeQuestionIndex].answers];
   shuffledQuestions.sort(() => Math.random() - 0.5);
 
   return (
-    <div id="question">
-      <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-      <ul id="answers">
-        {QUESTIONS[activeQuestionIndex].answers.map((answer) => (
-          <li key={answer} className="answer">
-            <button onClick={() => handleSelectAnswer(answer)}>{answer}</button>
-          </li>
-        ))}
-      </ul>
+    <div id="quiz">
+      <div id="question">
+        <QuestionTimer
+          timeout={10000}
+          onTimeout={() => handleSelectAnswer(null)}
+        />
+        <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
+        <ul id="answers">
+          {QUESTIONS[activeQuestionIndex].answers.map((answer) => (
+            <li key={answer} className="answer">
+              <button onClick={() => handleSelectAnswer(answer)}>
+                {answer}
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
